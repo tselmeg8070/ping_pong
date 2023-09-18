@@ -1,0 +1,64 @@
+"use client";
+import { useState } from 'react';
+import { Stage, Container, Sprite, useTick } from '@pixi/react';
+
+interface MotionDataInterface {
+	x: number;
+	y: number;
+	rotation: number;
+	anchor: number;
+}
+
+interface SpeedInterface {
+	x: number;
+	y: number;
+}
+
+interface MotionInterface {
+	data: MotionDataInterface
+}
+
+let iter = 0;
+
+const Ball = ({ option }: { option: MotionDataInterface }) => {
+	return <Sprite image="https://pixijs.io/pixi-react/img/bunny.png" {...option} height={50} width={50}/>;
+};
+
+export default function Home() {
+	const [motion, update] = useState<MotionDataInterface>({
+		x: 400,
+		y: 400
+		rotation: number;
+		anchor: number;
+	});
+	const [motionSpeed, setMotionSpeed] = useState<SpeedInterface>({
+		x: 2,
+		y: 2
+	});
+
+	useTick((delta: number) => {
+		iter += (0.05 * delta);
+		if ((motion.x >= 800 && motionSpeed.x > 0) || (motion.x <= 0 && motionSpeed.x < 0))
+			setMotionSpeed({
+				x: motionSpeed.x * (-1),
+				y: motionSpeed.y,
+			});
+		update({
+			x: motion.x + motionSpeed.x,
+			y: motion.y + motionSpeed.y,
+			rotation: Math.sin(iter) * Math.PI,
+			anchor: 0.5,
+		});
+	});
+	return (
+		<Stage width={800} height={800} options={{ autoDensity: true, backgroundColor: 0x01262a }}>
+			<Ball option={{
+				x: 400,
+				y: 400,
+				rotation: 0,
+				anchor: 0
+			}} />
+
+		</Stage>
+	);
+};
